@@ -12,10 +12,10 @@ You can divide the default pos and multiply it for your resolution
     - numpy (optional)
 ## Instructions
 
-1st Enable ADB on your phone
-2nd Link the pc or laptop to your phone 
-3rd Go in the main GUI for daily 
-4th Activate the script and enjoy
+- Enable ADB on your phone
+- Link the pc or laptop to your phone 
+- Go in the main GUI for daily 
+- Activate the script and enjoy
 
 ## Setup
 
