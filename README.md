@@ -10,8 +10,15 @@ You can divide the default pos and multiply it for your resolution
 - Python packages:
     - opencv-python
     - numpy (optional)
+## Instructions
+
+1st Enable ADB on your phone
+2nd Link the pc or laptop to your phone 
+3rd Go in the main GUI for daily 
+4th Activate the script and enjoy
 
 ## Setup
 
 ```bash
 pip install -r requirements.txt
+
