@@ -2,7 +2,7 @@
 
 This script automate pubg security daily for 2712 x 1220 pixels resolution phone
 
-You can divide the default pos and multiply it for your resolution
+Work on all resolution
 ## Requirements
 
 - Python 3

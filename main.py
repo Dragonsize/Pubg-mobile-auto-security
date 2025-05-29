@@ -98,4 +98,4 @@ while True:
 
     if not tapped:
         print("No matching pixels found. Waiting...")
-        time.sleep(normal_wait_seconds)
+        time.sleep(normal_wait_seconds)  
