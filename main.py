@@ -1,37 +1,29 @@
 import subprocess
 import cv2
 import time
-import os
 import re
+import numpy as np
 
-# color in BGR format
+# Colors in BGR
 YELLOW = (81, 222, 249)
 WHITE = (255, 255, 255)
 
-# cords percentages based on 2712x1220
 pixels_to_check_percentage = [
-    (0.353, 0.550, WHITE),   # play_vid
-    (0.810, 0.542, WHITE),   # violation
-    (0.485, 0.704, YELLOW),  # OK
-    (0.860, 0.848, YELLOW),  # review
-    (0.307, 0.342, WHITE),   # reason
+    (957 / 2712, 671 / 1220, WHITE),    # play_vid
+    (2198 / 2712, 662 / 1220, WHITE),   # violation
+    (1316 / 2712, 859 / 1220, YELLOW),  # OK
+    (2333 / 2712, 1035 / 1220, YELLOW), # review
+    (833 / 2712, 418 / 1220, WHITE),    # reason
 ]
 
-special_pixel_percentage = (0.353, 0.550)  # play_vid
+special_pixel_percentage = (957 / 2712, 671 / 1220)  # play_vid
 
 special_wait_seconds = 30
-normal_wait_seconds = 1
+normal_wait_seconds = 1 
 tolerance = 20
-
-DEBUG_FOLDER = os.path.join(os.getcwd(), "debug_screenshots")
-os.makedirs(DEBUG_FOLDER, exist_ok=True)
-
 
 def color_match(c1, c2, tol):
     return all(abs(a - b) <= tol for a, b in zip(c1, c2))
-
-def capture_screen(filename="screen.png"):
-    subprocess.run(["adb", "exec-out", "screencap", "-p"], stdout=open(filename, "wb"))
 
 def get_phone_resolution():
     try:
@@ -50,25 +42,31 @@ def get_phone_resolution():
         print(f"Error: {e}")
         return None, None
 
-# Get phone resolution
-phone_width, phone_height = get_phone_resolution()
+raw_width, raw_height = get_phone_resolution()
+
+phone_width = max(raw_width, raw_height)
+phone_height = min(raw_width, raw_height)
+
 if not phone_width or not phone_height:
     raise SystemExit("Failed to get phone resolution. Exiting.")
 
-# Calculate absolute pixel positions
 pixels_to_check = [
-    (int(px * phone_width), int(py * phone_height), color)
+    (round(px * phone_width), round(py * phone_height), color)
     for px, py, color in pixels_to_check_percentage
 ]
 special_pixel = (
-    int(special_pixel_percentage[0] * phone_width),
-    int(special_pixel_percentage[1] * phone_height)
+    round(special_pixel_percentage[0] * phone_width),
+    round(special_pixel_percentage[1] * phone_height)
 )
 
-while True:
-    capture_screen()
-    img = cv2.imread("screen.png")
+def capture_screen_to_cv2():
+    result = subprocess.run(["adb", "exec-out", "screencap", "-p"], stdout=subprocess.PIPE)
+    img_array = np.frombuffer(result.stdout, np.uint8)
+    img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
+    return img
 
+while True:
+    img = capture_screen_to_cv2()
     if img is None:
         print("Failed to load screenshot.")
         time.sleep(normal_wait_seconds)
@@ -93,9 +91,8 @@ while True:
                 time.sleep(special_wait_seconds)
             else:
                 time.sleep(normal_wait_seconds)
-
-            break  # stop checking after first tap
+            break
 
     if not tapped:
         print("No matching pixels found. Waiting...")
-        time.sleep(normal_wait_seconds)  
+        time.sleep(normal_wait_seconds)
