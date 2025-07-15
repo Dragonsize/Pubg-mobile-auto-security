@@ -7,18 +7,19 @@ import numpy as np
 # Colors in BGR
 YELLOW = (81, 222, 249)
 WHITE = (255, 255, 255)
+GRAY = (40, 40, 40)
 
 pixels_to_check_percentage = [
-    (957 / 2712, 671 / 1220, WHITE),    # play_vid
-    (2198 / 2712, 662 / 1220, WHITE),   # violation
-    (1316 / 2712, 859 / 1220, YELLOW),  # OK
-    (2333 / 2712, 1035 / 1220, YELLOW), # review
-    (833 / 2712, 418 / 1220, WHITE),    # reason
+    (1000 / 2712, 700 / 1220, WHITE),  # play_vid
+    (2450 / 2712, 675 / 1220, GRAY),   # violation
+    (1250 / 2712, 900 / 1220, YELLOW),  # OK
+    (2350 / 2712, 1100 / 1220, YELLOW), # review
+    (750 / 2712, 418 / 1220, GRAY),    # reason
 ]
 
-special_pixel_percentage = (957 / 2712, 671 / 1220)  # play_vid
+special_pixel_percentage = (1000 / 2712, 700 / 1220)  # play_vid
 
-special_wait_seconds = 30
+special_wait_seconds = 20
 normal_wait_seconds = 1 
 tolerance = 20
 
@@ -91,7 +92,7 @@ while True:
                 time.sleep(special_wait_seconds)
             else:
                 time.sleep(normal_wait_seconds)
-            break
+            
 
     if not tapped:
         print("No matching pixels found. Waiting...")
